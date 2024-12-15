@@ -1,5 +1,3 @@
-## Telegram trojan bot
-
 ## **Telegram sms flooder**
 Telegram telefon raqamiga telegram tomonidan 1 marotabalik code yuboradi hamda notogri parolni kiritadi va buni takrorlaydi, toki telefon raqami flood olmaguncha yani flood bu keyingi marotaba telefon raqami orqali tgga kirmoqchi bo'lsa kira olmaydi 24 soat kut deyaveradi
 ## **O'rnatish**
