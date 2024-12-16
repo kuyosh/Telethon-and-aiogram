@@ -5,7 +5,7 @@ from telethon import TelegramClient, events
 
 api_id = 10953300
 api_hash = "9c24426e5d6fa1d441913e3906627f87"
-phone_number = "+998947737719"
+phone_number = "+"
 
 emojis = [
     "\U0001F60A", "\U0001F602", "\U0001F618", "\U0001F44D", "\U0001F499", "\U0001F31F", "\U0001F389",
