@@ -29,8 +29,9 @@ translit_dict = {
     'w': 'в', 'x': 'х', 'y': 'й', 'z': 'з', 'ch': 'ч', 'ng': 'нг', "o'": 'ў', 'sh': 'ш'
 }
 
-client = TelegramClient('user_session', api_id, api_hash)
+client = TelegramClient('seans', api_id, api_hash)
 url_pattern = r'(https?://\S+|www\.\S+)'
+active = True
 
 def get_random_emoji():
     return random.choice(emojis)
@@ -43,14 +44,21 @@ def lotin_to_krill(text):
 
 @client.on(events.NewMessage(outgoing=True))
 async def handler(event):
-    if event.text and not re.match(url_pattern, event.text):
+    global active
+    if event.text == ".off":
+        active = False
+        await event.respond("Bot to'xtatildi.")
+    elif event.text == ".on":
+        active = True
+        await event.respond("Bot ishga tushdi.")
+    elif active and event.text and not re.match(url_pattern, event.text):
         result = lotin_to_krill(event.text)
         current_emoji = get_random_emoji()
         sent_message = await event.edit(f"**{result} {current_emoji}**", parse_mode='markdown')
         for _ in range(5):
             await asyncio.sleep(4)
             new_emoji = get_random_emoji()
-            if new_emoji != current_emoji:  
+            if new_emoji != current_emoji:
                 await sent_message.edit(f"**{result} {new_emoji}**", parse_mode='markdown')
                 current_emoji = new_emoji
 
