@@ -75,25 +75,23 @@ class ForwardBot:
             rate = count / elapsed_seconds
             print(f"🔄 {count} messages sent, rate: {rate:.2f} messages/second")
 
-    async def parse_handler(self, event):
+    async def parse1_handler(self, event):
         try:
+            # @username olish
             target_username = event.pattern_match.group(1)
+
+            # Agar ".parse1" bo'lsa, reply qilingan xabardan boshlanadi
+            reply_msg = await event.get_reply_message()
+            if not reply_msg:
+                await event.reply("❌ Please reply to a message to start forwarding!")
+                return
+            start_message_id = reply_msg.id
+            await event.reply(f"📤 Starting to forward from message ID {start_message_id} to {target_username}...")
+
+            # Xabarlarni yuborishni boshlash
             source_chat = await event.get_chat()
             source_id = source_chat.id
-            max_messages = None
-
-            if "continue" in event.raw_text.lower():
-                reply_msg = await event.get_reply_message()
-                if not reply_msg:
-                    await event.reply("❌ Please reply to a message to continue forwarding!")
-                    return
-                start_message_id = reply_msg.id
-                await event.reply(f"📤 Continuing forwarding from message ID {start_message_id} to {target_username}...")
-            else:
-                start_message_id = None
-                await event.reply(f"📤 Forwarding messages from this group/channel to {target_username}...")
-
-            await self.forward_messages(source_id, target_username, start_message_id, max_messages)
+            await self.forward_messages(source_id, target_username, start_message_id, max_messages=None)
             await event.reply("✅ All messages have been forwarded!")
         except Exception as e:
             await event.reply(f"❌ Error: {e}")
@@ -102,9 +100,10 @@ if __name__ == '__main__':
     print("Bot is running. You can send commands!")
     forward_bot = ForwardBot(client, DELAY_BETWEEN_MESSAGES)
 
-    @client.on(events.NewMessage(pattern=r'^\.parse( continue)? (@\w+)$'))
+    # ".parse1 @username" komandasi uchun handler
+    @client.on(events.NewMessage(pattern=r'^\.parse1 (@\w+)$'))
     async def handler(event):
-        await forward_bot.parse_handler(event)
+        await forward_bot.parse1_handler(event)
 
     with client:
         client.run_until_disconnected()
